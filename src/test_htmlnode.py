@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 
 class TestHTMLNode(unittest.TestCase):
@@ -65,6 +65,7 @@ class TestHTMLNode(unittest.TestCase):
             "HTMLNode(p, What a strange world, children: None, {'class': 'primary'})"
         )
 
+# LeafNode Tests
     def test_leafnode(self):
         node = LeafNode(
             "p",
@@ -129,10 +130,65 @@ class TestHTMLNode(unittest.TestCase):
             '<a href="https://www.google.com">Click me!</a>'
         )
 
-    def test_value_error_to_html(self):
+    def test_value_error_to_html_l(self):
         with self.assertRaises(ValueError):
             LeafNode("p", None).to_html()
 
+# ParentNode Tests
+    def test_parent_node_to_html(self):
+        node = ParentNode(
+            "p",
+            [
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode(None, "Normal text"),
+            ],
+        )
+        self.assertEqual(
+            node.to_html(),
+            "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>"
+        )
+        node2 = ParentNode(
+            "p",
+            [
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode(None, "Normal text"),
+            ],
+            {"href": "https://www.google.com"}
+        )
+        self.assertEqual(
+            node2.to_html(),
+            '<p href="https://www.google.com"><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>'
+        )
+        node3 = ParentNode(
+            'li',
+            [
+                node,
+                LeafNode(None, "Normal text")
+            ]
+        )
+        self.assertEqual(
+            node3.to_html(),
+            '<li><p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>Normal text</li>'
+        )
+
+    def test_value_error_to_html_p(self):
+        with self.assertRaises(ValueError):
+            ParentNode(
+                "p",
+                None
+            ).to_html()
+        with self.assertRaises(ValueError):
+            ParentNode(
+                None,
+                [
+                    LeafNode(None, "Normal text"),
+                    LeafNode("i", "italic text")
+                ]
+            ).to_html()
 
 if __name__ == "__main__":
     unittest.main()
