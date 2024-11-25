@@ -1,5 +1,5 @@
 from textnode import TextNode, TextType
-
+import re
 
 
 def split_nodes_delimiter(old_nodes: list, delimiter, text_type: TextType):
@@ -19,11 +19,19 @@ def split_nodes(old_nodes: list, delimiter, text_type: TextType):
     for old_node in old_nodes:
         if old_node.text_type != TextType.NORMAL:
             lst.append(old_node)
+            continue
         splitted_node = old_node.text.split(delimiter)
         if not is_delimiter_closed(splitted_node):
             raise Exception("Invalid Markdown syntax: delimiter not closed")
         lst.extend([TextNode(splitted_node[i],text_type) if is_odd(i) else TextNode(splitted_node[i], TextType.NORMAL) for i in range(len(splitted_node))])
     return lst
+
+def extract_markdown_images(text):
+    regex_syntax = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
+    return re.findall(regex_syntax, text)
+def extract_markdown_links(text):
+    regex_syntax = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
+    return re.findall(regex_syntax, text)
 
 def is_odd(n: int):
     return (n%2 == 1)
