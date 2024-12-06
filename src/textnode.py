@@ -3,12 +3,12 @@ from htmlnode import LeafNode
 
 
 class TextType(Enum):
-    NORMAL = "normal"
+    TEXT = "text"
     BOLD = "bold"
     ITALIC = "italic"
     CODE = "code"
-    LINKS = "links"
-    IMAGES = "images"
+    LINK = "link"
+    IMAGE = "image"
 
 
 class TextNode():
@@ -26,7 +26,7 @@ class TextNode():
 
 def text_node_to_html_node(text_node):
     match (text_node.text_type):
-        case (TextType.NORMAL):
+        case (TextType.TEXT):
             return LeafNode(None, text_node.text)
         case (TextType.BOLD):
             return LeafNode('b', text_node.text)
@@ -34,9 +34,9 @@ def text_node_to_html_node(text_node):
             return LeafNode('i', text_node.text)
         case (TextType.CODE):
             return LeafNode('code', text_node.text)
-        case (TextType.LINKS):
+        case (TextType.LINK):
             return LeafNode('a', text_node.text, {"href": f"{text_node.url}"})
-        case (TextType.IMAGES):
+        case (TextType.IMAGE):
             return LeafNode('img', '', {"src": f"{text_node.url}",
                                         "alt": f"{text_node.text}"}
                             )
