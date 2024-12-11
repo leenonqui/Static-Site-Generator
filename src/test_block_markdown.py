@@ -1,6 +1,6 @@
 import unittest
 
-from block_markdown import markdown_to_blocks
+from block_markdown import markdown_to_blocks, block_to_block_type
 
 
 class TestInlineMarkdown(unittest.TestCase):
@@ -43,6 +43,29 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
             markdown_to_blocks(md),
             blocks
         )
+
+    def test_block_to_block_type(self):
+        blocks = ["# Heading 1",
+        "```\nCode block\n```",
+        "> Quote block\n> Continues",
+        "* List item\n- Another item",
+        "1. Ordered item\n2. Second item",
+        "This is a paragraph."]
+
+        expected_types = [
+            'heading',
+            'code',
+            'quote',
+            'unordered_list',
+            'ordered_list',
+            'paragraph'
+        ]
+
+        for i, block in enumerate(blocks):
+            self.assertEqual(
+                block_to_block_type(block),
+                expected_types[i]
+            )
 
 
 if __name__ == "__main__":
