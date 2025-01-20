@@ -1,16 +1,30 @@
 import os
+import shutil
+
 from static_generator import copy_to_dst
+from gen_content import generate_page
 
-# code
+dir_path_static = "./static"
+dir_path_public = "./public"
+dir_path_content = "./content"
+template_path = "./template.html"
+
+
 def main():
-    current_path = os.getcwd()
+    print("Deleting public directory...")
+    if os.path.exists(dir_path_public):
+        shutil.rmtree(dir_path_public)
 
-    static = os.path.join(current_path, 'static')
-    public = os.path.join(current_path, 'public')
+    print("Copying static files to public directory...")
+    copy_to_dst(dir_path_static, dir_path_public)
 
-    print(current_path, static, public)
+    print("Generating page...")
+    generate_page(
+        os.path.join(dir_path_content, "index.md"),
+        template_path,
+        os.path.join(dir_path_public, "index.html"),
+    )
 
-    copy_to_dst(static, public)
 
 if __name__ == '__main__':
     main()
