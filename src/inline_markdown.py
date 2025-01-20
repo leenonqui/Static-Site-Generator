@@ -4,8 +4,8 @@ import re
 
 
 def text_to_textnodes(text: str) -> list:
-    textnode = TextNode(text, TextType.TEXT)
-    return (split_nodes_delimiter(split_nodes_delimiter(split_nodes_delimiter(split_nodes_link(split_nodes_image([textnode])), '**'), '*'), '`'))
+    nodes = (split_nodes_delimiter(split_nodes_delimiter(split_nodes_delimiter(split_nodes_link(split_nodes_image([TextNode(text, TextType.TEXT)])), '**'), '*'), '`'))
+    return [node for node in nodes if not (node.text_type == TextType.TEXT and node.text == "")]
 
 def split_nodes_delimiter(old_nodes: list, delimiter) -> list:
     # we need to distinguish between delimiters because if I look for italic (*) before looking for bold (**) it would generate a logic error in the code
@@ -28,9 +28,9 @@ def split_nodes(old_nodes: list, delimiter, text_type: TextType) -> list:
         splitted_node = list(old_node.text.split(delimiter))
         if not is_delimiter_closed(splitted_node):
             raise Exception("Invalid Markdown syntax: delimiter not closed")
-        if '' in splitted_node :
-            index = splitted_node.index('')
-            del splitted_node[index]
+        #if '' in splitted_node :
+        #    index = splitted_node.index('')
+        #    del splitted_node[index]
         new_nodes.extend([TextNode(splitted_node[i],text_type) if is_odd(i) else TextNode(splitted_node[i], TextType.TEXT) for i in range(len(splitted_node))])
     return new_nodes
 

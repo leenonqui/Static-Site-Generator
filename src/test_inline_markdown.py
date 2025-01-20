@@ -1,6 +1,6 @@
 import unittest
 from textnode import TextNode, TextType
-from inline_markdown import split_nodes_delimiter, split_nodes_image, split_nodes_link
+from inline_markdown import split_nodes_delimiter, split_nodes_image, split_nodes_link, split_nodes
 from inline_markdown import extract_markdown_images
 from inline_markdown import extract_markdown_links
 from inline_markdown import text_to_textnodes
@@ -23,6 +23,26 @@ class TestInlineMarkdown(unittest.TestCase):
             split_nodes_delimiter(split_nodes_delimiter(test_list,'**'),'`'),
             expected_list
         )
+
+    def test_bold_text_splitting(self):
+        # Arrange
+        text = "**I like Tolkien**"
+        node = TextNode(text, TextType.TEXT)
+
+        # Act
+        result = split_nodes([node], "**", TextType.BOLD)
+
+        # Debug prints
+        print("\nOriginal text split:", text.split("**"))
+        print("Result nodes:", result)
+
+        # Assert
+        expected = [
+            TextNode("", TextType.TEXT),
+            TextNode("I like Tolkien", TextType.BOLD),
+            TextNode("", TextType.TEXT)
+        ]
+        self.assertEqual(result, expected)
 
     def test_extract_markdown_images(self):
         text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
