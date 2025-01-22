@@ -28,9 +28,6 @@ def split_nodes(old_nodes: list, delimiter, text_type: TextType) -> list:
         splitted_node = list(old_node.text.split(delimiter))
         if not is_delimiter_closed(splitted_node):
             raise Exception("Invalid Markdown syntax: delimiter not closed")
-        #if '' in splitted_node :
-        #    index = splitted_node.index('')
-        #    del splitted_node[index]
         new_nodes.extend([TextNode(splitted_node[i],text_type) if is_odd(i) else TextNode(splitted_node[i], TextType.TEXT) for i in range(len(splitted_node))])
     return new_nodes
 

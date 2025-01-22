@@ -2,7 +2,7 @@ import os
 import shutil
 
 from static_generator import copy_to_dst
-from gen_content import generate_page
+from gen_content import generate_page_recursive
 
 dir_path_static = "./static"
 dir_path_public = "./public"
@@ -19,10 +19,10 @@ def main():
     copy_to_dst(dir_path_static, dir_path_public)
 
     print("Generating page...")
-    generate_page(
-        os.path.join(dir_path_content, "index.md"),
+    generate_page_recursive(
+        dir_path_content,
         template_path,
-        os.path.join(dir_path_public, "index.html"),
+        dir_path_public,
     )
 
 
